@@ -1,8 +1,9 @@
 let isRunning = false;
 let timerInterval;
-const pomodoroTime = 25 * 60; // 25 minutes
-const breakTime = 5 * 60; // 5 minutes
-let timeLeft = pomodoroTime;
+let startTime;
+let expectedEndTime;
+const pomodoroTime = 25 * 60 * 1000; // 25 minutes in milliseconds
+const breakTime = 5 * 60 * 1000; // 5 minutes in milliseconds
 const beepAudio = new Audio('sonar-ping-95840.mp3'); // Using the user's beep sound file
 
 const timerElement = document.getElementById('timer');
@@ -23,21 +24,33 @@ function startTimer() {
   isRunning = true;
   startButton.textContent = 'pause';
   
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  startTime = new Date().getTime();
+  expectedEndTime = startTime + pomodoroTime;
+  timerInterval = setInterval(updateTimer, 1000);
+}
 
-    if (timeLeft === 0) {
-      beepAudio.play(); // Play beep sound
-      if (timerElement.textContent.startsWith('25')) {
-        timeLeft = breakTime; // Start break
-      } else {
-        timeLeft = pomodoroTime; // Start new pomodoro
-      }
+function updateTimer() {
+  const currentTime = new Date().getTime();
+  const timeLeft = expectedEndTime - currentTime;
+
+  if (timeLeft < 0) {
+    clearInterval(timerInterval);
+    beepAudio.play();
+    // Start break or new pomodoro
+    if (timerElement.textContent.startsWith('25')) {
+      startTime = new Date().getTime();
+      expectedEndTime = startTime + breakTime;
+    } else {
+      startTime = new Date().getTime();
+      expectedEndTime = startTime + pomodoroTime;
     }
-  }, 1000);
+    timerInterval = setInterval(updateTimer, 1000);
+  } else {
+    // Update timer display
+    const minutes = Math.floor(timeLeft / 60000);
+    const seconds = Math.floor((timeLeft % 60000) / 1000);
+    timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  }
 }
 
 function stopTimer() {
@@ -48,6 +61,5 @@ function stopTimer() {
 
 function resetTimer() {
   stopTimer();
-  timeLeft = pomodoroTime;
   timerElement.textContent = '25:00';
 }
