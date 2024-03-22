@@ -1,38 +1,58 @@
 body, html {
-  height: 100%;
   margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
+  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
+  height: 100vh; /* Full height */
+  text-align: center;
 }
 
 .pomodoro {
-  text-align: center;
-  color: #646B87; /* Using the dark blue color for text */
+  padding: 20px;
 }
 
 .timer {
-  font-size: 5em;
+  font-size: 48px; /* Larger font size for readability */
   margin: 20px 0;
 }
 
 .button {
-  background-color: #99B0D8; /* Using the light blue color for buttons */
+  background-color: #99B0D8; /* Light blue color */
   border: none;
   color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
+  padding: 20px 40px; /* Larger buttons for easier interaction */
+  margin: 10px; /* Space out buttons */
+  font-size: 20px; /* Larger font size for readability */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Soft shadow for depth */
+  transition: background-color 0.3s, transform 0.1s; /* Smooth transitions */
 }
 
 .button:active {
-  transform: translateY(2px);
+  background-color: #829ab1; /* Darken color on press */
+  transform: translateY(4px); /* Push down button on press */
 }
 
-/* Additional styles can be added here for other elements, using the extracted colors */
+/* Media queries for responsiveness */
+@media (max-width: 600px) {
+  .timer {
+    font-size: 5em; /* Even larger font for very small devices */
+  }
+  .button {
+    padding: 15px 30px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 601px) {
+  .timer {
+    font-size: 3em; /* Slightly smaller font for tablets and up */
+  }
+  .button {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
