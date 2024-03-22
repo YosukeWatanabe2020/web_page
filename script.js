@@ -1,5 +1,5 @@
 let isRunning = false;
-let timerInterval;
+let frameRequest;
 let startTime;
 let expectedEndTime;
 const pomodoroTime = 25 * 60 * 1000; // 25 minutes in milliseconds
@@ -24,42 +24,36 @@ function startTimer() {
   isRunning = true;
   startButton.textContent = 'pause';
   
-  startTime = new Date().getTime();
+  startTime = Date.now();
   expectedEndTime = startTime + pomodoroTime;
-  timerInterval = setInterval(updateTimer, 1000);
+  frameRequest = requestAnimationFrame(updateTimer);
 }
 
 function updateTimer() {
-  const currentTime = new Date().getTime();
+  const currentTime = Date.now();
   const timeLeft = expectedEndTime - currentTime;
 
-  if (timeLeft < 0) {
-    clearInterval(timerInterval);
+  if (timeLeft <= 0) {
+    cancelAnimationFrame(frameRequest);
     beepAudio.play();
-    // Start break or new pomodoro
-    if (timerElement.textContent.startsWith('25')) {
-      startTime = new Date().getTime();
-      expectedEndTime = startTime + breakTime;
-    } else {
-      startTime = new Date().getTime();
-      expectedEndTime = startTime + pomodoroTime;
-    }
-    timerInterval = setInterval(updateTimer, 1000);
+    resetTimer();
+    // ... handle end of timer
   } else {
-    // Update timer display
     const minutes = Math.floor(timeLeft / 60000);
     const seconds = Math.floor((timeLeft % 60000) / 1000);
     timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    frameRequest = requestAnimationFrame(updateTimer);
   }
 }
 
 function stopTimer() {
   isRunning = false;
   startButton.textContent = 'start';
-  clearInterval(timerInterval);
+  cancelAnimationFrame(frameRequest);
 }
 
 function resetTimer() {
   stopTimer();
   timerElement.textContent = '25:00';
+  expectedEndTime = Date.now() + pomodoroTime;
 }
