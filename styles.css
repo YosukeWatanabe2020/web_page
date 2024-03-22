@@ -11,11 +11,11 @@ body, html {
 }
 
 .pomodoro {
-  padding: 20px;
+  padding: 30px;
 }
 
 .timer {
-  font-size: 48px; /* Larger font size for readability */
+  font-size: 72px; /* Larger font size for readability */
   margin: 20px 0;
 }
 
