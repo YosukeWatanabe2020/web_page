@@ -1,0 +1,38 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+}
+
+.pomodoro {
+  text-align: center;
+  color: #646B87; /* Using the dark blue color for text */
+}
+
+.timer {
+  font-size: 5em;
+  margin: 20px 0;
+}
+
+.button {
+  background-color: #99B0D8; /* Using the light blue color for buttons */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button:active {
+  transform: translateY(2px);
+}
+
+/* Additional styles can be added here for other elements, using the extracted colors */
