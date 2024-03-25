@@ -1,10 +1,10 @@
+
 let isRunning = false;
-let frameRequest;
-let startTime;
-let expectedEndTime;
+let intervalID;
+let endTime; // タイマーの終了時刻を記録
+
 const pomodoroTime = 25 * 60 * 1000; // 25 minutes in milliseconds
-const breakTime = 5 * 60 * 1000; // 5 minutes in milliseconds
-const beepAudio = new Audio('sonar-ping-95840.mp3'); // Using the user's beep sound file
+const beepAudio = new Audio('sonar-ping-95840.mp3');
 
 const timerElement = document.getElementById('timer');
 const startButton = document.getElementById('start');
@@ -24,17 +24,17 @@ function startTimer() {
   isRunning = true;
   startButton.textContent = 'pause';
   
-  startTime = Date.now();
-  expectedEndTime = startTime + pomodoroTime;
-  frameRequest = requestAnimationFrame(updateTimer);
+  const now = Date.now();
+  endTime = now + pomodoroTime; // 終了時刻を設定
+  intervalID = setInterval(updateTimer, 1000); // Update every second
 }
 
 function updateTimer() {
-  const currentTime = Date.now();
-  const timeLeft = expectedEndTime - currentTime;
-
+  const now = Date.now();
+  const timeLeft = endTime - now;
+  
   if (timeLeft <= 0) {
-    cancelAnimationFrame(frameRequest);
+    clearInterval(intervalID);
     beepAudio.play();
     resetTimer();
     // ... handle end of timer
@@ -42,18 +42,16 @@ function updateTimer() {
     const minutes = Math.floor(timeLeft / 60000);
     const seconds = Math.floor((timeLeft % 60000) / 1000);
     timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    frameRequest = requestAnimationFrame(updateTimer);
   }
 }
 
 function stopTimer() {
   isRunning = false;
   startButton.textContent = 'start';
-  cancelAnimationFrame(frameRequest);
+  clearInterval(intervalID);
 }
 
 function resetTimer() {
   stopTimer();
   timerElement.textContent = '25:00';
-  expectedEndTime = Date.now() + pomodoroTime;
 }
